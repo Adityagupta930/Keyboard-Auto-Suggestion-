@@ -1,0 +1,136 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Autocorrect System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body style="background:#a1e5a1;">
+    <div class="container mt-5">
+        <h1>AutoSuggest and Autocorrect System</h1>
+        <form method="POST" action="/suggest" class="mt-4">
+            <div class="form-group">
+                <label for="keyword">Enter a word:</label>
+                <input type="text" class="form-control" id="keyword" name="keyword" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div id="suggestions" class="mt-4">
+        {% if suggestions %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Suggested Word</th>
+                    <th>Similarity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for suggestion in suggestions %}
+                <tr>
+                    <td>{{ suggestion['Word'] }}</td>
+                    <td>{{ suggestion['Similarity'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        </div>
+
+
+    </div>
+</body>
+</html> -->\
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartSpell: Autocorrect System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        @keyframes gradient {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        .gradient-bg {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <div class="container max-w-md w-full glass-effect p-8">
+        <h1 class="text-4xl font-bold mb-6 text-white text-center">SmartSpell</h1>
+        <p class="text-white text-center mb-8">Intelligent AutoSuggest and Autocorrect System</p>
+        
+        <form id="word-form" class="mb-8">
+            <div class="relative">
+                <input type="text" id="keyword" name="keyword" required
+                       class="w-full px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
+                       placeholder="Enter a word...">
+                <button type="submit"
+                        class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-500 text-white px-4 py-1 rounded-full hover:bg-blue-600 transition-colors duration-300">
+                    Check
+                </button>
+            </div>
+        </form>
+
+        <div id="suggestions" class="hidden">
+            <h2 class="text-xl font-semibold mb-4 text-white">Suggestions:</h2>
+            <ul id="suggestion-list" class="space-y-2"></ul>
+        </div>
+
+        <div id="loading" class="hidden text-center">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('word-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const word = document.getElementById('keyword').value;
+            const suggestionsList = document.getElementById('suggestion-list');
+            const suggestionsDiv = document.getElementById('suggestions');
+            const loadingDiv = document.getElementById('loading');
+
+            suggestionsList.innerHTML = '';
+            suggestionsDiv.classList.add('hidden');
+            loadingDiv.classList.remove('hidden');
+
+            // Simulating API call with setTimeout
+            setTimeout(() => {
+                loadingDiv.classList.add('hidden');
+                suggestionsDiv.classList.remove('hidden');
+
+                // Mock data - replace this with actual API call in production
+                const mockSuggestions = [
+                    { Word: word, Similarity: 1 },
+                    { Word: word + 's', Similarity: 0.9 },
+                    { Word: word.substring(0, word.length - 1), Similarity: 0.8 }
+                ];
+
+                mockSuggestions.forEach(suggestion => {
+                    const li = document.createElement('li');
+                    li.className = 'bg-white bg-opacity-20 p-3 rounded-lg flex justify-between items-center';
+                    li.innerHTML = `
+                        <span class="text-white">${suggestion.Word}</span>
+                        <span class="text-sm text-green-300">${(suggestion.Similarity * 100).toFixed(1)}% match</span>
+                    `;
+                    suggestionsList.appendChild(li);
+                });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
